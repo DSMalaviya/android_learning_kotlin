@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -103,75 +104,81 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.tv_option_one -> {
                 tvOptionOne?.let {
-                    selectedOptionView(it,1)
+                    selectedOptionView(it, 1)
                 }
             }
 
-            R.id.tv_option_two->{
+            R.id.tv_option_two -> {
                 tvOptionTwo?.let {
-                    selectedOptionView(it,2)
+                    selectedOptionView(it, 2)
                 }
             }
 
-            R.id.tv_option_three->{
+            R.id.tv_option_three -> {
                 tvOptionThree?.let {
-                    selectedOptionView(it,3)
+                    selectedOptionView(it, 3)
                 }
             }
 
-            R.id.tv_option_four->{
+            R.id.tv_option_four -> {
                 tvOptionFour?.let {
-                    selectedOptionView(it,4)
+                    selectedOptionView(it, 4)
                 }
             }
 
-            R.id.btn_submit->{
-                if(mSeleectedOptionPosition==0){
+            R.id.btn_submit -> {
+                if (mSeleectedOptionPosition == 0) {
                     mCurrentPosition++
-                    when{
-                        mCurrentPosition<=mQuestionList!!.size->{
+                    when {
+                        mCurrentPosition <= mQuestionList!!.size -> {
                             setQuestion()
-                        }else->{
-                            Toast.makeText(this@QuizQuestionActivity,"you did it!!",Toast.LENGTH_SHORT).show()
-
+                        }
+                        else -> {
+                            // Toast.makeText(this@QuizQuestionActivity,"you did it!!",Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, ResultActivity::class.java)
+                            intent.putExtra(Constants.USER_NAME, mUserName);
+                            intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
+                            startActivity(intent)
+                            finish()
                         }
                     }
-                }else{
-                    val question=mQuestionList?.get(mCurrentPosition-1);
+                } else {
+                    val question = mQuestionList?.get(mCurrentPosition - 1);
 
-                    if(question!!.correctAnswer!=mSeleectedOptionPosition){
-                        answerView(mSeleectedOptionPosition,R.drawable.wrong_option_border_bg)
-                    }else{
+                    if (question!!.correctAnswer != mSeleectedOptionPosition) {
+                        answerView(mSeleectedOptionPosition, R.drawable.wrong_option_border_bg)
+                    } else {
                         mCorrectAnswers++
                     }
 
-                    answerView(question.correctAnswer,R.drawable.correct_option_border_bg)
+                    answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
 
-                    if(mCurrentPosition==mQuestionList!!.size){
-                        buttonSubmit?.text="FINISH"
-                    }else{
-                        buttonSubmit?.text="GO TO NEXT QUESTION"
+                    if (mCurrentPosition == mQuestionList!!.size) {
+                        buttonSubmit?.text = "FINISH"
+                    } else {
+                        buttonSubmit?.text = "GO TO NEXT QUESTION"
                     }
 
-                    mSeleectedOptionPosition=0
+                    mSeleectedOptionPosition = 0
                 }
             }
         }
     }
 
-    private  fun answerView(answer:Int,drawableView:Int){
-        when(answer){
-            1->{
-                tvOptionOne?.background=ContextCompat.getDrawable(this,drawableView)
+    private fun answerView(answer: Int, drawableView: Int) {
+        when (answer) {
+            1 -> {
+                tvOptionOne?.background = ContextCompat.getDrawable(this, drawableView)
             }
-            2->{
-                tvOptionTwo?.background=ContextCompat.getDrawable(this,drawableView);
+            2 -> {
+                tvOptionTwo?.background = ContextCompat.getDrawable(this, drawableView);
             }
-            3->{
-                tvOptionThree?.background=ContextCompat.getDrawable(this,drawableView)
+            3 -> {
+                tvOptionThree?.background = ContextCompat.getDrawable(this, drawableView)
             }
-            4->{
-                tvOptionFour?.background=ContextCompat.getDrawable(this,drawableView)
+            4 -> {
+                tvOptionFour?.background = ContextCompat.getDrawable(this, drawableView)
             }
         }
     }
@@ -182,7 +189,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
         tv.setTextColor(
             Color.parseColor("#363a43")
         )
-        tv.setTypeface(tv.typeface,Typeface.BOLD);
-        tv.background=ContextCompat.getDrawable(this,R.drawable.selected_option_border_bg);
+        tv.setTypeface(tv.typeface, Typeface.BOLD);
+        tv.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg);
     }
 }
