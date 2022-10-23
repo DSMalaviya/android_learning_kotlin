@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 
@@ -18,6 +19,7 @@ class DrawingView(context: Context, attrs:AttributeSet):View(context,attrs) {
     private var mBrushSize:Float=0.toFloat();
     private var color= Color.BLACK
     private var canvas:Canvas?=null
+    private val mPaths=ArrayList<CustomPath>();
 
     init {
         setupDrawing()
@@ -31,7 +33,7 @@ class DrawingView(context: Context, attrs:AttributeSet):View(context,attrs) {
         mdrawPaint!!.strokeJoin=Paint.Join.ROUND
         mdrawPaint!!.strokeCap=Paint.Cap.ROUND
         mCanvasPaint=Paint(Paint.DITHER_FLAG)
-        mBrushSize=20.toFloat()
+       // mBrushSize=20.toFloat()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -44,6 +46,13 @@ class DrawingView(context: Context, attrs:AttributeSet):View(context,attrs) {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawBitmap(mCanvasBitmap!!,0f,0f,mCanvasPaint)
+
+        for (path in mPaths){
+            mdrawPaint!!.strokeWidth=path.brushThickness
+            mdrawPaint!!.color=path.color
+            canvas?.drawPath(path,mdrawPaint!!)
+        }
+
         if(!mDrawPath!!.isEmpty){
             mdrawPaint!!.strokeWidth=mDrawPath!!.brushThickness
             mdrawPaint!!.color=mDrawPath!!.color
@@ -70,6 +79,7 @@ class DrawingView(context: Context, attrs:AttributeSet):View(context,attrs) {
                 }
             }
             MotionEvent.ACTION_UP->{
+                mPaths.add(mDrawPath!!)
                 mDrawPath=CustomPath(color,mBrushSize)
             }
             else-> return false
@@ -79,6 +89,11 @@ class DrawingView(context: Context, attrs:AttributeSet):View(context,attrs) {
 
         return true
 
+    }
+
+    fun setSizeForBrush(newSize:Float){
+        mBrushSize=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,newSize,resources.displayMetrics);
+        mdrawPaint!!.strokeWidth=mBrushSize;
     }
 
    internal inner class CustomPath(var color:Int,var brushThickness:Float) : Path(){
