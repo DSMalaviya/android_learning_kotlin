@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sevenminworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -26,6 +27,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercisePosition = -1
     private var tts: TextToSpeech? = null
     private var player: MediaPlayer? = null
+    private var exerciseStatusAdapter:ExerciseStatusAdapter?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onBackPressedDispatcher.onBackPressed()
         }
         setupRestView()
+        setupExerciseStatusRecyclerView()
+    }
+
+    private fun setupExerciseStatusRecyclerView(){
+        binding?.rvExerciseStatus?.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        exerciseStatusAdapter=ExerciseStatusAdapter(exersiseList!!)
+        binding?.rvExerciseStatus?.adapter=exerciseStatusAdapter
     }
 
     private fun setRestProgressBar() {
@@ -65,6 +74,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 //                    "Here now we will start the exercise",
 //                    Toast.LENGTH_SHORT
 //                ).show()
+                exersiseList!![currentExercisePosition].setIsSelected(true)
+                exerciseStatusAdapter?.notifyDataSetChanged()
                 setupExerciseView()
             }
         }.start()
@@ -89,6 +100,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 //                    Toast.LENGTH_SHORT
 //                ).show()
                 if (currentExercisePosition < exersiseList!!.size - 1) {
+                    exersiseList!![currentExercisePosition].setIsSelected(false)
+                    exersiseList!![currentExercisePosition].setIsCompleted(true)
+                    exerciseStatusAdapter?.notifyDataSetChanged()
                     setupRestView()
                 } else {
                     Toast.makeText(
