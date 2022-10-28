@@ -1,5 +1,6 @@
 package com.example.sevenminworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private var player: MediaPlayer? = null
     private var exerciseStatusAdapter:ExerciseStatusAdapter?=null
+    private val restTime:Long=1;
+    private val exerciseTime:Long=1;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +54,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setupExerciseStatusRecyclerView(){
         binding?.rvExerciseStatus?.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        exerciseStatusAdapter=ExerciseStatusAdapter(exersiseList!!)
+        exerciseStatusAdapter= ExerciseStatusAdapter(exersiseList!!)
         binding?.rvExerciseStatus?.adapter=exerciseStatusAdapter
     }
 
     private fun setRestProgressBar() {
         binding?.progressBar?.progress = restProgress
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(restTime*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
@@ -83,7 +86,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTime*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
@@ -110,6 +113,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         "Congo",
                         Toast.LENGTH_SHORT
                     ).show()
+                    val intent=Intent(this@ExerciseActivity,FinishActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }.start()
