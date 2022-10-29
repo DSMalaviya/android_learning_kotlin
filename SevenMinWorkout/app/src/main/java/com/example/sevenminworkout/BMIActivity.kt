@@ -75,11 +75,11 @@ class BMIActivity : AppCompatActivity() {
             bmiDescription = "OMG! You are in a very dangerous condition! Act now!"
         }
 
-        binding?.llDisplayBMIResult?.visibility= View.VISIBLE
-        val bmiValue=BigDecimal(bmi.toDouble()).setScale(2,RoundingMode.HALF_EVEN).toString()
-        binding?.tvBMIValue?.text=bmiValue
-        binding?.tvBMIType?.text=bmiLabel
-        binding?.tvBMIDescription?.text=bmiDescription
+        binding?.llDisplayBMIResult?.visibility = View.VISIBLE
+        val bmiValue = BigDecimal(bmi.toDouble()).setScale(2, RoundingMode.HALF_EVEN).toString()
+        binding?.tvBMIValue?.text = bmiValue
+        binding?.tvBMIType?.text = bmiLabel
+        binding?.tvBMIDescription?.text = bmiDescription
     }
 
     private fun validateMetricUnits(): Boolean {
